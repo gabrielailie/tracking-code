@@ -19,7 +19,43 @@ class Welcome extends CI_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 	public function index()
-	{
-		$this->load->view('welcome_message');
-	}
+    {   
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['code'])) {
+         $code = $_POST['code'];
+         $this->load->model('Delivery');
+         $record = $this->Delivery->checkTrackingCode($code); 
+
+         if ($record === false) {
+         	$last['error'] = 'The tracking code is not correct! Please try again!';
+         } else {
+         	$last['date'] = $record;
+         }
+
+         $this->load->view('form_delivery_date', $last);
+
+        } else {
+            
+            $this->load->view('form_delivery_date');
+        }
+    }
+
+    public function updateDeliveryDate()
+    {   
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['code']) && !empty($_POST['date'])) {
+         $this->load->model('Delivery');
+         $record = $this->Delivery->updateDeliveryDate($_POST['code'], $_POST['date']); 
+
+         if ($record === false) {
+         	$data['error'] = 'The tracking code is not correct! Please try again!';
+         } else {
+         	$data['succes'] = 'Delivery date was updated!';
+         }
+
+         $this->load->view('form_update_delivery_date', $data);
+
+        } else {
+            
+            $this->load->view('form_update_delivery_date');
+        }
+    }
 }
