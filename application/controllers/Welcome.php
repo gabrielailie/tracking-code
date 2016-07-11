@@ -18,7 +18,7 @@ class Welcome extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
-	public function index()
+	public function index() //Get estimated delivery date
     {   
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['code'])) {
          $code = $_POST['code'];
